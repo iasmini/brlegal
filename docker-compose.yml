@@ -1,0 +1,29 @@
+version: "3"
+
+# app - nome do servico
+# ports - maps port 8000 from host to 8000 from image
+# command - comando para executar a aplicação (0.0.0.0 - disponível para todos os ips do container)
+services:
+  app:
+    user: $UID:$GID
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DB_HOST=db
+      - DB_NAME=brlegal
+      - DB_USER=brlegal
+      - DB_PASS=brlegal
+    depends_on:
+      - db
+
+  db:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: brlegal
+      POSTGRES_USER: brlegal
+      POSTGRES_PASSWORD: brlegal

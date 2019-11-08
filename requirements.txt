@@ -1,0 +1,5 @@
+Django~=2.2.7
+psycopg2~=2.8.4
+djangorestframework~=3.10.3
+# tool for style guide enforcement - pep8 (linting tool)
+flake8~=3.7.9
