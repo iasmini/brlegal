@@ -3,10 +3,17 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
 from account.serializers import UserSerializer, AuthTokenSerializer
+from django.contrib.auth import get_user_model
 
 
 class CreateUserView(generics.CreateAPIView):
     """Create new user in the system"""
+    serializer_class = UserSerializer
+
+
+class ListUserView(generics.ListAPIView):
+    """List the users in the system"""
+    queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
 
