@@ -1,18 +1,17 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from recipe import views
+from geo import views
 
 # default router is a feature of the Django rest framework that automatically
 # generate the urls for our viewset
 # what the default router does is it automatically registers the appropriate
 # urls for all of the actions in our view set
 router = DefaultRouter()
-router.register('tags', views.TagViewSet)
-router.register('ingredients', views.IngredientViewSet)
-router.register('recipes', views.RecipeViewSet)
+router.register('states', views.StateViewSet)
+router.register('court-districts', views.CourtDistrictViewSet)
 
-app_name = 'recipe'
+app_name = 'geo'
 
 urlpatterns = [
     path('', include(router.urls)),

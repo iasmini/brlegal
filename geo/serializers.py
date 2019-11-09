@@ -1,54 +1,30 @@
 from rest_framework import serializers
 
-from core.models import Tag, Ingredient, Recipe
+from geo.models import CourtDistrict, State
 
 
-class TagSerializer(serializers.ModelSerializer):
-    """Serializer for tag objects"""
+class StateSerializer(serializers.ModelSerializer):
+    """Serializer for state objects"""
 
     class Meta:
-        model = Tag
-        fields = ('id', 'name')
+        model = State
+        fields = ('id', 'name', 'initials')
         read_only_fields = ('id',)
 
 
-class IngredientSerializer(serializers.ModelSerializer):
-    """Serializer for ingredient objects"""
-
-    class Meta:
-        model = Ingredient
-        fields = ('id', 'name')
-        read_only_fields = ('id',)
-
-
-class RecipeSerializer(serializers.ModelSerializer):
-    """Serialize a recipe"""
-    ingredients = serializers.PrimaryKeyRelatedField(
+class CourtDistrictSerializer(serializers.ModelSerializer):
+    """Serialize a court district"""
+    state = serializers.PrimaryKeyRelatedField(
         many=True,
-        queryset=Ingredient.objects.all()
-    )
-    tags = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=Tag.objects.all()
+        queryset=State.objects.all()
     )
 
     class Meta:
-        model = Recipe
-        fields = ('id', 'title', 'time_minutes', 'cost', 'link', 'ingredients',
-                  'tags')
+        model = CourtDistrict
+        fields = ('id', 'name', 'state')
         read_only_fields = ('id',)
 
 
-class RecipeDetailSerializer(RecipeSerializer):
-    """Serialize a recipe detail"""
-    ingredients = IngredientSerializer(many=True, read_only=True)
-    tags = TagSerializer(many=True, read_only=True)
-
-
-class RecipeImageSerializer(serializers.ModelSerializer):
-    """Serialize for uploading images to recipes"""
-
-    class Meta:
-        model = Recipe
-        fields = ('id', 'image')
-        read_only_fields = ('id',)
+class CourtDistrictDetailSerializer(CourtDistrictSerializer):
+    """Serialize a court district detail"""
+    state = StateSerializer(many=False, read_only=True)
