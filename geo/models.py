@@ -19,7 +19,7 @@ class State(models.Model):
 
 
 class CourtDistrict(models.Model):
-    """CourtDistrict object"""
+    """Court district object"""
     name = models.CharField(max_length=255, null=False, blank=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -30,7 +30,7 @@ class CourtDistrict(models.Model):
     )
     state = models.ForeignKey(
         State,
-        on_delete=models.CASCADE(),
+        on_delete=models.CASCADE,
         null=False,
         blank=False,
         verbose_name=_('State'))

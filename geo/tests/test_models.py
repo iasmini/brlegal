@@ -11,7 +11,7 @@ def sample_user(email='test@test.com', password='123'):
 
 def sample_state(user, name='Minas Gerais', initials='MG'):
     """Create a sample user"""
-    return models.State.objects.create(name, initials, user)
+    return models.State.objects.create(name=name, initials=initials, user=user)
 
 
 class ModelTests(TestCase):
@@ -28,10 +28,12 @@ class ModelTests(TestCase):
     def test_court_district_str(self):
         """Test the court district string representation"""
         user = sample_user()
+        state = sample_state(user)
+
         court_district = models.CourtDistrict.objects.create(
             user=user,
             name='Belo Horizonte',
-            state=sample_state(user=user),
+            state=state,
         )
 
         self.assertEqual(str(court_district), court_district.name)
