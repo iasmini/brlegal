@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password', 'name', 'is_superuser', 'is_staff')
+        fields = ('email', 'password', 'name')
         # extra - allows to configure extra settings in model serializer
         # used to ensure that the password is right with the complexity rules
         extra_kwargs = {'password': {'write_only': True, 'min_length': 1}}

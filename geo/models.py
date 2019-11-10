@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class State(models.Model):
     """State from the court district"""
-    name = models.CharField(max_length=255, null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False, unique=True)
     initials = models.CharField(max_length=2, null=False, blank=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -20,7 +20,7 @@ class State(models.Model):
 
 class CourtDistrict(models.Model):
     """Court district object"""
-    name = models.CharField(max_length=255, null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False, unique=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,

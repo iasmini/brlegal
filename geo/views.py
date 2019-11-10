@@ -15,16 +15,10 @@ class BaseCourtDistrictAttrViewSet(viewsets.GenericViewSet,
 
     def get_queryset(self):
         """Return objects for the current authenticated user only"""
-        # # 'assigned_only', 0: o zero significa que se o assigned_only for None
-        # # retorna zero (valor default para None)
-        # assigned_only = bool(
-        #     int(self.request.query_params.get('assigned_only', 0))
-        # )
-        # queryset = self.queryset
-        # if assigned_only:
-        #     # filtra somente receitas com tags ou ingredientes
-        #     queryset = queryset.filter(recipe__isnull=False)
-        #
+
+        print(self.request.user)
+        print(self.request.auth)
+
         return self.queryset.filter(
             user=self.request.user).order_by('-name').distinct()
 
@@ -58,19 +52,8 @@ class CourtDistrictViewSet(viewsets.ModelViewSet):
 
         return queryset.filter(user=self.request.user)
 
-    # this is the function that's called to retrieve the serializer class for
-    # a particular request and it is this function that you would use if you
-    # want to change the serializer class for the different actions that are
-    # available
-    # we have a number of actions available by default in the model. we used 2.
-    # one of them is a list in which case we just want to return the default
-    # and that the other action is retrieve, in which case we want to return
-    # the details of the serializer.
     def get_serializer_class(self):
         """Return appropriate serializer class"""
-        if self.action == 'retrieve':
-            return serializers.CourtDistrictDetailSerializer
-
         return serializers.CourtDistrictSerializer
 
     def perform_create(self, serializer):

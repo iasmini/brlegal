@@ -7,7 +7,7 @@ from rest_framework.test import APIClient
 
 from geo.models import CourtDistrict, State
 
-from geo.serializers import CourtDistrictSerializer, CourtDistrictDetailSerializer
+from geo.serializers import CourtDistrictSerializer
 
 # app:identifier for the url in the app
 COURT_DISTRICT_URL = reverse('geo:courtdistrict-list')
@@ -24,15 +24,9 @@ def sample_state(user, name='Minas Gerais', initials='MG'):
     return State.objects.create(user=user, name=name, initials=initials)
 
 
-def sample_court_district(user, **params):
+def sample_court_district(user, name, state):
     """Create an return a sample court district"""
-    defaults = {
-        'name': 'Belo Horizonte',
-        'state': sample_state(user)
-    }
-    defaults.update(params)
-
-    return CourtDistrict.objects.create(user=user, **defaults)
+    return CourtDistrict.objects.create(user=user, name=name, state=state)
 
 
 class PublicCourtDistrictAPITests(TestCase):
@@ -61,14 +55,20 @@ class PrivateCourtDistrictAPITests(TestCase):
 
     def test_retrieve_court_districts(self):
         """Test retrieving a list of court districts"""
-        sample_court_district(user=self.user)
-        sample_court_district(user=self.user)
+        state = sample_state(user=self.user, name='Minas Gerais',
+                             initials='MG')
+        sample_court_district(user=self.user, name='Belo Horizonte',
+                              state=state)
+        state = sample_state(user=self.user, name='Bahia',
+                             initials='BA')
+        sample_court_district(user=self.user, name='Salvador',
+                              state=state)
 
         res = self.client.get(COURT_DISTRICT_URL)
 
         court_districts = CourtDistrict.objects.all().order_by('-id')
         # many=True - returns results as a list
-        serializer = CourtDistrictSerializer(court_districts, many=True)
+        serializer = CourtDistrictSerializer(court_districts, many=False)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
@@ -79,8 +79,15 @@ class PrivateCourtDistrictAPITests(TestCase):
             'teste2@teste.com',
             '123'
         )
-        sample_court_district(user=user2)
-        sample_court_district(user=self.user)
+
+        state = sample_state(user=user2, name='Minas Gerais',
+                             initials='MG')
+        sample_court_district(user=user2, name='Belo Horizonte',
+                              state=state)
+        state = sample_state(user=self.user, name='Bahia',
+                             initials='BA')
+        sample_court_district(user=self.user, name='Salvador',
+                              state=state)
 
         res = self.client.get(COURT_DISTRICT_URL)
 
@@ -92,7 +99,12 @@ class PrivateCourtDistrictAPITests(TestCase):
 
     def test_view_court_district_detail(self):
         """Test a viewing a court district detail"""
-        court_district = sample_court_district(user=self.user)
+        state = sample_state(user=self.user, name='Bahia',
+                             initials='BA')
+        court_district = sample_court_district(
+            user=self.user,
+            name='Salvador',
+            state=state)
 
         url = detail_url(court_district.id)
         res = self.client.get(url)

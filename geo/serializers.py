@@ -14,8 +14,9 @@ class StateSerializer(serializers.ModelSerializer):
 
 class CourtDistrictSerializer(serializers.ModelSerializer):
     """Serialize a court district"""
+
     state = serializers.PrimaryKeyRelatedField(
-        many=True,
+        many=False,
         queryset=State.objects.all()
     )
 
@@ -23,8 +24,3 @@ class CourtDistrictSerializer(serializers.ModelSerializer):
         model = CourtDistrict
         fields = ('id', 'name', 'state')
         read_only_fields = ('id',)
-
-
-class CourtDistrictDetailSerializer(CourtDistrictSerializer):
-    """Serialize a court district detail"""
-    state = StateSerializer(many=False, read_only=True)
