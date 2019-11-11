@@ -9,7 +9,7 @@ RUN mkdir /app
 WORKDIR /app
 
 # copy from local machine requirements to docker image to /requirements.txt
-COPY ./requirements.txt /app/
+COPY requirements.txt /requirements.txt
 
 RUN pip install -r requirements.txt
 COPY . /app
