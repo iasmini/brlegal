@@ -33,7 +33,12 @@ class CourtDistrict(models.Model):
         on_delete=models.CASCADE,
         null=False,
         blank=False,
+        related_name='court_districts',
         verbose_name=_('State'))
+
+    class Meta:
+        unique_together = ['state', 'name']
+        ordering = ['name']
 
     def __str__(self):
         return self.name

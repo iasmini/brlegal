@@ -6,31 +6,22 @@ from geo.models import State, CourtDistrict
 from geo import serializers
 
 
-class BaseCourtDistrictAttrViewSet(viewsets.GenericViewSet,
-                                   mixins.ListModelMixin,
-                                   mixins.CreateModelMixin):
-    """Base viewset for user owned court district attributes"""
+class StateViewSet(viewsets.ModelViewSet):
+    """Manage states in the database"""
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        """Return objects for the current authenticated user only"""
-
-        print(self.request.user)
-        print(self.request.auth)
-
-        return self.queryset.filter(
-            user=self.request.user).order_by('-name').distinct()
-
-    def perform_create(self, serializer):
-        """Create a new base court district attribute"""
-        serializer.save(user=self.request.user)
-
-
-class StateViewSet(BaseCourtDistrictAttrViewSet):
-    """Manage states in the database"""
     queryset = State.objects.all()
     serializer_class = serializers.StateSerializer
+
+    def get_queryset(self):
+        """Retrieve the states for the authenticated user"""
+        queryset = self.queryset
+
+        return queryset.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        """Create a new state"""
+        serializer.save(user=self.request.user)
 
 
 class CourtDistrictViewSet(viewsets.ModelViewSet):
@@ -51,10 +42,6 @@ class CourtDistrictViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(state__id__in=state_id)
 
         return queryset.filter(user=self.request.user)
-
-    def get_serializer_class(self):
-        """Return appropriate serializer class"""
-        return serializers.CourtDistrictSerializer
 
     def perform_create(self, serializer):
         """Create a new court district"""
