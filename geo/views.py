@@ -38,7 +38,7 @@ class CourtDistrictViewSet(viewsets.ModelViewSet):
         state = self.request.query_params.get('state')
         queryset = self.queryset
         if state:
-            state_id = int(state)
+            state_id = [int(state)]
             queryset = queryset.filter(state__id__in=state_id)
 
         return queryset.filter(user=self.request.user)

@@ -8,7 +8,7 @@ class StateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = State
-        fields = ('id', 'name', 'initials', 'court_districts')
+        fields = ('id', 'name', 'initials')
         read_only_fields = ('id',)
 
 
